@@ -1,0 +1,85 @@
+class Student:
+    def __init__(self, name):
+        self.name = name
+        self.grades = {}  # Dictionary to store grades for each subject
+    
+    def input_grade(self, subject, grade):
+        """ Method to input grades for a subject """
+        if subject in self.grades:
+            self.grades[subject].append(grade)
+        else:
+            self.grades[subject] = [grade]
+    
+    def calculate_average_grade(self):
+        """ Method to calculate the average grade of the student """
+        if not self.grades:
+            return 0.0
+        
+        total_sum = 0
+        total_count = 0
+        
+        for grades_list in self.grades.values():
+            total_sum += sum(grades_list)
+            total_count += len(grades_list)
+        
+        if total_count == 0:
+            return 0.0
+        else:
+            return total_sum / total_count
+    
+    def calculate_letter_grade(self):
+        """ Method to calculate the letter grade based on average grade """
+        average_grade = self.calculate_average_grade()
+        
+        if average_grade >= 90:
+            return 'A'
+        elif average_grade >= 80:
+            return 'B'
+        elif average_grade >= 70:
+            return 'C'
+        elif average_grade >= 60:
+            return 'D'
+        else:
+            return 'F'
+    
+    def display_student_info(self):
+        """ Method to display student information """
+        print(f"Student Name: {self.name}")
+        
+        for subject, grades_list in self.grades.items():
+            print(f"{subject} Grades: {grades_list}")
+        
+        average_grade = self.calculate_average_grade()
+        print(f"Average Grade: {average_grade:.2f}")
+        
+        letter_grade = self.calculate_letter_grade()
+        print(f"Letter Grade: {letter_grade}")
+
+# Function to interactively input grades for a student
+def input_grades(student):
+    while True:
+        subject = input("Enter subject name (or 'quit' to exit): ")
+        if subject.lower() == 'quit':
+            break
+        
+        while True:
+            try:
+                grade = float(input(f"Enter grade for {subject}: "))
+                if 0 <= grade <= 100:
+                    break
+                else:
+                    print("Grade must be between 0 and 100.")
+            except ValueError:
+                print("Please enter a valid grade (a number between 0 and 100).")
+        
+        student.input_grade(subject, grade)
+
+# Main program
+if __name__ == "__main__":
+    student_name = input("Enter student's name: ")
+    student = Student(student_name)
+    
+    input_grades(student)
+    
+    print("\nStudent Information:")
+    student.display_student_info()
